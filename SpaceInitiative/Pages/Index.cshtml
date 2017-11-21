@@ -1,0 +1,53 @@
+﻿@page
+@model IndexModel
+@{
+    ViewData["Title"] = "Home page";
+}
+
+<div id="baseDiv">
+    <form method="post">
+        <table class="table">
+            <thead>
+                <tr>
+                    @*<th>ID</th>*@
+                    <th>Name</th>
+                    <th>Bonus</th>
+                    <th>Roll</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var ship in Model.Ships.OrderByDescending(s => s.Roll))
+                {
+                    <tr>
+                        @*<td>@ship.Id</td>*@
+                        <td>@ship.Name</td>
+                        <td>@ship.Bonus</td>
+                        <td>@ship.Roll</td>
+                        <td>
+
+                            <button type="submit" asp-page-handler="delete"
+                                    asp-route-id="@ship.Id">
+                                remove
+                            </button>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </form>
+
+    <form method="post">
+        <button type="submit" asp-page-handler="roll">
+            Start New Round
+        </button>
+    </form>
+
+    <p>Add a new ship:</p>
+
+    <div asp-validation-summary="All"></div>
+    <form method="POST">
+        <div>Name: <input asp-for="Ship.Name" /></div>
+        <div>Bonus: <input asp-for="Ship.Bonus" /></div>
+        <button type="submit">Add Ship</button>
+    </form>
+</div>
