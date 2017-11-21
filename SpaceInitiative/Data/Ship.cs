@@ -14,7 +14,21 @@ namespace SpaceInitiative.Data
         public string Name { get; set; }
 
         [Required]
-        public int Bonus { get; set; }
+        public int BonusBase { get; set; }
+
+        private int? _bonusCurrent = null;
+        public int BonusCurrent
+        {
+            get { return _bonusCurrent.HasValue ? _bonusCurrent.Value : BonusBase; }
+            set
+            {
+                _bonusCurrent = value;
+                if (value == BonusBase)
+                {
+                    _bonusCurrent = null;
+                }
+            }
+        }
 
         public int Roll { get; set; }
     }

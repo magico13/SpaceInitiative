@@ -58,11 +58,24 @@ namespace SpaceInitiative.Pages
             Random r = new Random();
             foreach (var ship in _db.Ships)
             {
-                ship.Roll = r.Next(20) + 1 + ship.Bonus;
+                ship.Roll = r.Next(20) + 1 + ship.BonusCurrent;
                 _db.Attach(ship).State = EntityState.Modified;
             }
             await _db.SaveChangesAsync();
-            return RedirectToPage("/Index");
+            return RedirectToPage();
+        }
+
+        public async Task<IActionResult> OnPostUpdateBonusAsync(int id, int bonus)
+        {
+            var ship = await _db.Ships.FindAsync(id);
+
+            if (ship != null)
+            {
+                ship.BonusCurrent = bonus;
+                _db.Attach(ship).State = EntityState.Modified;
+                await _db.SaveChangesAsync();
+            }
+            return RedirectToPage();
         }
     }
 }

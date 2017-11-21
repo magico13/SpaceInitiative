@@ -11,7 +11,8 @@
                 <tr>
                     @*<th>ID</th>*@
                     <th>Name</th>
-                    <th>Bonus</th>
+                    <th>Base Bonus</th>
+                    <th>Current Bonus</th>
                     <th>Roll</th>
                 </tr>
             </thead>
@@ -21,13 +22,21 @@
                     <tr>
                         @*<td>@ship.Id</td>*@
                         <td>@ship.Name</td>
-                        <td>@ship.Bonus</td>
+                        <td>@ship.BonusBase</td>
+                        <td>
+                            @*<input asp-for="@ship.BonusCurrent" />*@ 
+                            @Html.EditorFor(m => m.Ships.FirstOrDefault(s => s.Id == ship.Id).BonusCurrent)
+                            <button type="submit" asp-page-handler="UpdateBonus"
+                                    asp-route-id="@ship.Id" asp-route-bonus="@ship.BonusCurrent">
+                                Update
+                            </button>
+                        </td>
                         <td>@ship.Roll</td>
                         <td>
 
-                            <button type="submit" asp-page-handler="delete"
+                            <button type="submit" asp-page-handler="Delete"
                                     asp-route-id="@ship.Id">
-                                remove
+                                Remove
                             </button>
                         </td>
                     </tr>
@@ -47,7 +56,7 @@
     <div asp-validation-summary="All"></div>
     <form method="POST">
         <div>Name: <input asp-for="Ship.Name" /></div>
-        <div>Bonus: <input asp-for="Ship.Bonus" /></div>
+        <div>Bonus: <input asp-for="Ship.BonusBase" /></div>
         <button type="submit">Add Ship</button>
     </form>
 </div>
