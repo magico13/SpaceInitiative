@@ -22,10 +22,13 @@ namespace SpaceInitiative.Data
             get { return _bonusCurrent.HasValue ? _bonusCurrent.Value : BonusBase; }
             set
             {
-                _bonusCurrent = value;
                 if (value == BonusBase)
                 {
                     _bonusCurrent = null;
+                }
+                else
+                {
+                    _bonusCurrent = value;
                 }
             }
         }

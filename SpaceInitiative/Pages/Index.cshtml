@@ -6,38 +6,30 @@
 
 <div id="baseDiv">
     <form method="post">
-        <table class="table">
+        <table class="table" >
             <thead>
                 <tr>
                     @*<th>ID</th>*@
                     <th>Name</th>
-                    <th>Base Bonus</th>
-                    <th>Current Bonus</th>
-                    <th>Roll</th>
+                    <th align="center">Base Bonus</th>
+                    <th align="center">Current Bonus</th>
+                    <th align="center">Roll</th>
                 </tr>
             </thead>
             <tbody>
-                @foreach (var ship in Model.Ships.OrderByDescending(s => s.Roll))
+                @for (int i = 0; i < (Model.Ships?.Count ?? 0); i++)
                 {
+                    var ship = Model.Ships[i];
                     <tr>
                         @*<td>@ship.Id</td>*@
-                        <td>@ship.Name</td>
-                        <td>@ship.BonusBase</td>
-                        <td>
-                            @*<input asp-for="@ship.BonusCurrent" />*@ 
-                            @Html.EditorFor(m => m.Ships.FirstOrDefault(s => s.Id == ship.Id).BonusCurrent)
-                            <button type="submit" asp-page-handler="UpdateBonus"
-                                    asp-route-id="@ship.Id" asp-route-bonus="@ship.BonusCurrent">
-                                Update
-                            </button>
-                        </td>
-                        <td>@ship.Roll</td>
-                        <td>
-
-                            <button type="submit" asp-page-handler="Delete"
-                                    asp-route-id="@ship.Id">
-                                Remove
-                            </button>
+                        <td align="justify"><input asp-for="@ship.Name"/></td>
+                        <td align="center">@ship.BonusBase</td>
+                        <td align="center"><input asp-for=" @ship.BonusCurrent" style="width:50px" /></td>
+                        <td align="center">@ship.Roll</td>
+                        <td align="justify">
+                            <button type="submit" asp-page-handler="Update" asp-route-id="@ship.Id" asp-route-index="@i">Update</button>
+                            <button type="submit" asp-page-handler="Delete" asp-route-id="@ship.Id">Remove</button>
+                            <button type="submit" asp-page-handler="Duplicate" asp-route-id="@ship.Id">Duplicate</button>
                         </td>
                     </tr>
                 }
@@ -51,12 +43,19 @@
         </button>
     </form>
 
-    <p>Add a new ship:</p>
+    
 
     <div asp-validation-summary="All"></div>
     <form method="POST">
-        <div>Name: <input asp-for="Ship.Name" /></div>
-        <div>Bonus: <input asp-for="Ship.BonusBase" /></div>
+        <div style="font-size:large;font-weight:bold">Add a new ship:</div>
+        <div>
+            <label asp-for="Ship.Name" style="width:50px">Name: </label>
+            <input asp-for="Ship.Name" />
+        </div>
+        <div>
+        <label asp-for="Ship.BonusBase" style="width:50px">Bonus: </label>
+        <input asp-for="Ship.BonusBase" />
+        </div>
         <button type="submit">Add Ship</button>
     </form>
 </div>
