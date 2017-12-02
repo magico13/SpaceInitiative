@@ -24,8 +24,7 @@
                         <td>@ship.Name</td>
                         <td>@ship.BonusBase</td>
                         <td>
-                            @*<input asp-for="@ship.BonusCurrent" />*@ 
-                            @Html.EditorFor(m => m.Ships.FirstOrDefault(s => s.Id == ship.Id).BonusCurrent)
+                            <input asp-for="@ship.BonusCurrent" style="width:50px" />
                             <button type="submit" asp-page-handler="UpdateBonus"
                                     asp-route-id="@ship.Id" asp-route-bonus="@ship.BonusCurrent">
                                 Update
@@ -33,11 +32,7 @@
                         </td>
                         <td>@ship.Roll</td>
                         <td>
-
-                            <button type="submit" asp-page-handler="Delete"
-                                    asp-route-id="@ship.Id">
-                                Remove
-                            </button>
+                            <button type="submit" asp-page-handler="Delete" asp-route-id="@ship.Id">Remove</button>
                         </td>
                     </tr>
                 }
@@ -45,18 +40,45 @@
         </table>
     </form>
 
-    <form method="post">
-        <button type="submit" asp-page-handler="roll">
-            Start New Round
-        </button>
-    </form>
+    <div id="RoundAndAdd" style="max-width:250px;float:left">
+        <h3>Round Number: @Model.CurrentRound.Round</h3>
+        <h4>Phase: @Model.CurrentRound.Step</h4>
 
-    <p>Add a new ship:</p>
+        <form method="post">
+            <button type="submit" asp-page-handler="roll">Advance Round</button>
+            <button type="submit" asp-page-handler="ResetCounter">Reset Counter</button>
+        </form>
 
-    <div asp-validation-summary="All"></div>
-    <form method="POST">
-        <div>Name: <input asp-for="Ship.Name" /></div>
-        <div>Bonus: <input asp-for="Ship.BonusBase" /></div>
-        <button type="submit">Add Ship</button>
-    </form>
+        <div asp-validation-summary="All"></div>
+        <form method="POST">
+            <h4>Add a new ship:</h4>
+            <div>
+                <label asp-for="Ship.Name" style="width:50px">Name:</label><input asp-for="Ship.Name" />
+            </div>
+            <div>
+                <label asp-for="Ship.BonusBase" style="width:50px">Bonus:</label><input asp-for="Ship.BonusBase" />
+            </div>
+            <button type="submit" asp-page-handler="AddShip">Add Ship</button>
+        </form>
+    </div>
+
+    <div id="RoundInfo" style="float:left;margin-left:10px">
+        <h3>@Model.CurrentRound.Step Phase Actions:</h3>
+        @if (Model.CurrentRound.Step == Data.ROUND_STEP.ENGINEERING)
+        {
+            <p>You can do some engineering stuff.</p>
+
+        }
+        else if (Model.CurrentRound.Step == Data.ROUND_STEP.PILOTING)
+        {
+            <p>You can do some piloting stuff.</p>
+
+        }
+        else
+        {
+            <p>You can do some gunnery stuff.</p>
+
+        }
+    </div>
+    <div style="clear:both" />
 </div>

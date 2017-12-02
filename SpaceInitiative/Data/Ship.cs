@@ -8,6 +8,7 @@ namespace SpaceInitiative.Data
 {
     public class Ship
     {
+        [Key]
         public int Id { get; set; }
 
         [Required, StringLength(100)]

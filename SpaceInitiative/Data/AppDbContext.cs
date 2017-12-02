@@ -14,5 +14,6 @@ namespace SpaceInitiative.Data
         }
 
         public DbSet<Ship> Ships { get; set; }
+        public DbSet<RoundHolder> CurrentRound { get; set; }
     }
 }

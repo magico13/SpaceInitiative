@@ -23,12 +23,36 @@ namespace SpaceInitiative.Pages
 
         public IList<Ship> Ships { get; private set; }
 
+        public RoundHolder CurrentRound
+        {
+            get
+            {
+                if (!_db.CurrentRound.Any())
+                {
+                    lock (_db)
+                    {
+                        if (!_db.CurrentRound.Any())
+                        {
+                            _db.CurrentRound.Add(new RoundHolder());
+                            _db.SaveChanges();
+                        }
+                    }
+                }
+                return _db.CurrentRound.Single();
+            }
+            set
+            {
+                _db.CurrentRound.Single().CopyFrom(value);
+                _db.SaveChanges();
+            }
+        }
+
         public async Task OnGetAsync()
         {
             Ships = await _db.Ships.AsNoTracking().ToListAsync();
         }
 
-        public async Task<IActionResult> OnPostAsync()
+        public async Task<IActionResult> OnPostAddShipAsync()
         {
             if (!ModelState.IsValid)
             {
@@ -55,11 +79,27 @@ namespace SpaceInitiative.Pages
 
         public async Task<IActionResult> OnPostRollAsync()
         {
-            Random r = new Random();
-            foreach (var ship in _db.Ships)
+            if (CurrentRound.Round == 0)
             {
-                ship.Roll = r.Next(20) + 1 + ship.BonusCurrent;
-                _db.Attach(ship).State = EntityState.Modified;
+                CurrentRound.Round++;
+                CurrentRound.Step = ROUND_STEP.ENGINEERING;
+            }
+            else
+            {
+                CurrentRound.Step = (ROUND_STEP)(((int)CurrentRound.Step + 1) % 3);
+                if (CurrentRound.Step == ROUND_STEP.PILOTING)
+                {
+                    Random r = new Random();
+                    foreach (var ship in _db.Ships)
+                    {
+                        ship.Roll = r.Next(20) + 1 + ship.BonusCurrent;
+                        _db.Attach(ship).State = EntityState.Modified;
+                    }
+                }
+                else if (CurrentRound.Step == ROUND_STEP.ENGINEERING)
+                {
+                    CurrentRound.Round++;
+                }
             }
             await _db.SaveChangesAsync();
             return RedirectToPage();
@@ -75,6 +115,14 @@ namespace SpaceInitiative.Pages
                 _db.Attach(ship).State = EntityState.Modified;
                 await _db.SaveChangesAsync();
             }
+            return RedirectToPage();
+        }
+
+        public async Task<IActionResult> OnPostResetCounterAsync()
+        {
+            CurrentRound.Round = 0;
+            CurrentRound.Step = ROUND_STEP.ENGINEERING;
+            await _db.SaveChangesAsync();
             return RedirectToPage();
         }
     }
