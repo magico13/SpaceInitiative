@@ -6,33 +6,30 @@
 
 <div id="baseDiv">
     <form method="post">
-        <table class="table">
+        <table class="table" >
             <thead>
                 <tr>
                     @*<th>ID</th>*@
                     <th>Name</th>
-                    <th>Base Bonus</th>
-                    <th>Current Bonus</th>
-                    <th>Roll</th>
+                    <th align="center">Base Bonus</th>
+                    <th align="center">Current Bonus</th>
+                    <th align="center">Roll</th>
                 </tr>
             </thead>
             <tbody>
-                @foreach (var ship in Model.Ships.OrderByDescending(s => s.Roll))
+                @for (int i = 0; i < (Model.Ships?.Count ?? 0); i++)
                 {
+                    var ship = Model.Ships[i];
                     <tr>
                         @*<td>@ship.Id</td>*@
-                        <td>@ship.Name</td>
-                        <td>@ship.BonusBase</td>
-                        <td>
-                            <input asp-for="@ship.BonusCurrent" style="width:50px" />
-                            <button type="submit" asp-page-handler="UpdateBonus"
-                                    asp-route-id="@ship.Id" asp-route-bonus="@ship.BonusCurrent">
-                                Update
-                            </button>
-                        </td>
-                        <td>@ship.Roll</td>
-                        <td>
+                        <td align="justify"><input asp-for="@ship.Name"/></td>
+                        <td align="center">@ship.BonusBase</td>
+                        <td align="center"><input asp-for=" @ship.BonusCurrent" style="width:50px" /></td>
+                        <td align="center">@ship.Roll</td>
+                        <td align="justify">
+                            <button type="submit" asp-page-handler="Update" asp-route-id="@ship.Id" asp-route-index="@i">Update</button>
                             <button type="submit" asp-page-handler="Delete" asp-route-id="@ship.Id">Remove</button>
+                            <button type="submit" asp-page-handler="Duplicate" asp-route-id="@ship.Id">Duplicate</button>
                         </td>
                     </tr>
                 }
