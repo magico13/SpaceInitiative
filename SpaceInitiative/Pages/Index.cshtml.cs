@@ -60,7 +60,7 @@ namespace SpaceInitiative.Pages
 
         public async Task OnGetAsync()
         {
-            Ships = _db.Ships.AsNoTracking().ToList();
+            Ships = await _db.Ships.AsNoTracking().ToListAsync();
         }
 
         public async Task<IActionResult> OnPostAddShipAsync()
@@ -98,7 +98,7 @@ namespace SpaceInitiative.Pages
             else
             {
                 CurrentRound.Step = (ROUND_STEP)(((int)CurrentRound.Step + 1) % 3);
-                if (CurrentRound.Step == ROUND_STEP.PILOTING)
+                if (CurrentRound.Step == ROUND_STEP.HELM)
                 {
                     Random r = new Random();
                     foreach (var ship in _db.Ships)
@@ -150,12 +150,6 @@ namespace SpaceInitiative.Pages
                 await _db.SaveChangesAsync();
             }
 
-            if (ship != null)
-            {
-                ship.BonusCurrent = bonus;
-                _db.Attach(ship).State = EntityState.Modified;
-                await _db.SaveChangesAsync();
-            }
             return RedirectToPage();
         }
 

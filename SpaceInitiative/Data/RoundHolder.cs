@@ -9,7 +9,7 @@ namespace SpaceInitiative.Data
     public enum ROUND_STEP
     {
         ENGINEERING,
-        PILOTING,
+        HELM,
         GUNNERY
     }
 

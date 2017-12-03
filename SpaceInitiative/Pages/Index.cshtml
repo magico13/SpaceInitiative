@@ -61,20 +61,75 @@
 
     <div id="RoundInfo" style="float:left;margin-left:10px">
         <h3>@Model.CurrentRound.Step Phase Actions:</h3>
+        <div>
+            <h4>Captain (<a href="http://www.starfindersrd.com/game-mastering/starship-combat/#Captain_Actions" target="_blank">link</a>)</h4>
+            <ul>
+                <li><b>Demand</b> - +4 one check, DC 15+2T Intimidate</li>
+                <li><b>Encourage</b> - +2 one check (Aid Another), DC 10 same skill or 15+T Diplomacy</li>
+                <li><b>Taunt (Push)</b> - DC 15+2xEnemy Tier Bluff/Intimidate to give -2 for 1d4 rounds on one phase, -4 on push</li>
+                <li><b>Orders (lvl 6, Push)</b> - Spend 1 Resolve to grant additional action to one member. DC 10+3xT</li>
+                <li><b>Moving Speech (lvl 12, Push)</b> - Spend 1 Resolve, DC 15+2xT Diplomacy. Allies can roll twice and take better.</li>
+            </ul>
+        </div>
         @if (Model.CurrentRound.Step == Data.ROUND_STEP.ENGINEERING)
         {
-            <p>You can do some engineering stuff.</p>
-
+            <div>
+                <h4>Engineer (<a href="http://www.starfindersrd.com/game-mastering/starship-combat/#Engineer_Actions" target="_blank">link</a>)</h4>
+                <ul>
+                    <li><b>Divert</b> - DC 10+2xT Engineering. Boost a system (+2 speed, +2 science officer, 1s as 2s on damage, or 5% of PCU shields back)</li>
+                    <li><b>Hold It Together</b> - DC 15+2xT Engineering. Critical Damage 2 steps less for round. Not affected by core Crit Dmg.</li>
+                    <li><b>Patch</b> - Reduce critical effect. DC 10/15/20+2xT and 1/2/3 actions. Not affected by core Crit Dmg.</li>
+                    <li><b>Overpower (6 ranks, Push)</b> - Spend 1 Resolve, DC 10+3xT: Divert to 3 systems.</li>
+                    <li><b>Quick Fix (12 ranks)</b> - Spend 1 Resolve, DC 15+2xT. Remove critical damage from 1 system for 1 hour.</li>
+                </ul>
+            </div>
         }
-        else if (Model.CurrentRound.Step == Data.ROUND_STEP.PILOTING)
+        else if (Model.CurrentRound.Step == Data.ROUND_STEP.HELM)
         {
-            <p>You can do some piloting stuff.</p>
-
+            <div>
+                <h4>Pilot (<a href="http://www.starfindersrd.com/game-mastering/starship-combat/#Pilot_Actions" target="_blank">link</a>)</h4>
+                <ul>
+                    <li>Fly</li>
+                    <li>Maneuver</li>
+                    <li>Stunt (Push)</li>
+                    <li>Full Power (6 ranks, Push)</li>
+                    <li>Audacious Gambit (12 ranks, Push)</li>
+                </ul>
+            </div>
+            <div>
+                <h4>Science Officer (<a href="http://www.starfindersrd.com/game-mastering/starship-combat/#Science_Officer_Actions" target="_blank">link</a>)</h4>
+                <ul>
+                    <li>Balance</li>
+                    <li>Scan</li>
+                    <li>Target System (Push)</li>
+                    <li>Lock On (6 ranks, Push)</li>
+                    <li>Improve Countermeasures (12 ranks, Push)</li>
+                </ul>
+            </div>
+            <div>
+                <h4>Minor - Pilot (<a href="http://www.starfindersrd.com/game-mastering/starship-combat/#Minor_Crew_Actions" target="_blank">link</a>)</h4>
+                <ul>
+                    <li>Glide</li>
+                </ul>
+            </div>
         }
         else
         {
-            <p>You can do some gunnery stuff.</p>
-
+            <div>
+                <h4>Gunner (<a href="http://www.starfindersrd.com/game-mastering/starship-combat/#Gunner_Actions" target="_blank">link</a>)</h4>
+                <ul>
+                    <li>Fire at Will (Push)</li>
+                    <li>Shoot</li>
+                    <li>Broadside (lvl 6, Push)</li>
+                    <li>Precise Targeting (lvl 12, Push)</li>
+                </ul>
+            </div>
+            <div>
+                <h4>Minor - Gunner (<a href="http://www.starfindersrd.com/game-mastering/starship-combat/#Minor_Crew_Actions" target="_blank">link</a>)</h4>
+                <ul>
+                    <li>Snap Shot</li>
+                </ul>
+            </div>
         }
     </div>
     <div style="clear:both" />
