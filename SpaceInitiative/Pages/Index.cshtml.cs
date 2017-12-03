@@ -44,7 +44,7 @@ namespace SpaceInitiative.Pages
                     {
                         if (!_db.CurrentRound.Any())
                         {
-                            _db.CurrentRound.Add(new RoundHolder());
+                            _db.CurrentRound.Add(new RoundHolder() { Round = 1 });
                             _db.SaveChanges();
                         }
                     }
@@ -90,27 +90,19 @@ namespace SpaceInitiative.Pages
 
         public async Task<IActionResult> OnPostRollAsync()
         {
-            if (CurrentRound.Round == 0)
+            CurrentRound.Step = (ROUND_STEP)(((int)CurrentRound.Step + 1) % 3);
+            if (CurrentRound.Step == ROUND_STEP.HELM)
+            {
+                Random r = new Random();
+                foreach (var ship in _db.Ships)
+                {
+                    ship.Roll = r.Next(20) + 1 + ship.BonusCurrent;
+                    _db.Attach(ship).State = EntityState.Modified;
+                }
+            }
+            else if (CurrentRound.Step == ROUND_STEP.ENGINEERING)
             {
                 CurrentRound.Round++;
-                CurrentRound.Step = ROUND_STEP.ENGINEERING;
-            }
-            else
-            {
-                CurrentRound.Step = (ROUND_STEP)(((int)CurrentRound.Step + 1) % 3);
-                if (CurrentRound.Step == ROUND_STEP.HELM)
-                {
-                    Random r = new Random();
-                    foreach (var ship in _db.Ships)
-                    {
-                        ship.Roll = r.Next(20) + 1 + ship.BonusCurrent;
-                        _db.Attach(ship).State = EntityState.Modified;
-                    }
-                }
-                else if (CurrentRound.Step == ROUND_STEP.ENGINEERING)
-                {
-                    CurrentRound.Round++;
-                }
             }
             await _db.SaveChangesAsync();
             return RedirectToPage();
@@ -155,7 +147,7 @@ namespace SpaceInitiative.Pages
 
         public async Task<IActionResult> OnPostResetCounterAsync()
         {
-            CurrentRound.Round = 0;
+            CurrentRound.Round = 1;
             CurrentRound.Step = ROUND_STEP.ENGINEERING;
             await _db.SaveChangesAsync();
             return RedirectToPage();
