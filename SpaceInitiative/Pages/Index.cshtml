@@ -24,7 +24,7 @@
                         @*<td>@ship.Id</td>*@
                         <td align="justify"><input asp-for="@ship.Name"/></td>
                         <td align="center">@ship.BonusBase</td>
-                        <td align="center"><input asp-for=" @ship.BonusCurrent" style="width:50px" /></td>
+                        <td align="center"><input asp-for="@ship.BonusCurrent" style="width:50px" /></td>
                         <td align="center">@ship.Roll</td>
                         <td align="justify">
                             <button type="submit" asp-page-handler="Update" asp-route-id="@ship.Id" asp-route-index="@i">Update</button>

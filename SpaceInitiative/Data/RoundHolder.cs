@@ -17,6 +17,7 @@ namespace SpaceInitiative.Data
     {
         [Key]
         public int ID { get; set; }
+        public int EncounterID { get; set; }
         public int Round { get; set; }
         public ROUND_STEP Step { get; set; }
 

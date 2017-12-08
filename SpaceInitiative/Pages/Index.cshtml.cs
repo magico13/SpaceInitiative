@@ -21,46 +21,59 @@ namespace SpaceInitiative.Pages
         [BindProperty]
         public Ship Ship { get; set; }
 
+        public Encounter Encounter
+        {
+            get
+            {
+                if (!_db.Encounters.Any())
+                {
+                    _db.Encounters.Add(new Encounter() { EncounterStringID = "A1337", LastUpdate = DateTime.UtcNow });
+                }
+                Encounter encounter = _db.Encounters.Find(1);
+                encounter.LastUpdate = DateTime.UtcNow;
+                return encounter;
+            }
+        }
+
         private List<Ship> _ships;
         public IList<Ship> Ships
         {
             get
             {
-                return _ships;
+                return _db.Ships.Where(s => s.EncounterID == Encounter.EncounterID).OrderByDescending(s => s.Roll).ToList();
             }
-            private set
-            {
-                _ships = value?.OrderByDescending(s => s.Roll).ToList();
-            }
+            //private set
+            //{
+            //    _ships = value?.OrderByDescending(s => s.Roll).ToList();
+            //}
         }
 
         public RoundHolder CurrentRound
         {
             get
             {
-                if (!_db.CurrentRound.Any())
+                IQueryable<RoundHolder> rounds = _db.RoundHolders.Where(r => r.EncounterID == Encounter.EncounterID);
+                if (!rounds.Any())
                 {
                     lock (_db)
                     {
-                        if (!_db.CurrentRound.Any())
-                        {
-                            _db.CurrentRound.Add(new RoundHolder() { Round = 1 });
-                            _db.SaveChanges();
-                        }
+                        _db.RoundHolders.Add(new RoundHolder() { Round = 1, EncounterID = Encounter.EncounterID });
+                        _db.SaveChanges();
                     }
+                    return _db.RoundHolders.Where(r => r.EncounterID == Encounter.EncounterID).First();
                 }
-                return _db.CurrentRound.Single();
-            }
-            set
-            {
-                _db.CurrentRound.Single().CopyFrom(value);
-                _db.SaveChanges();
+                else
+                {
+                    return rounds.First();
+                }
+                
             }
         }
 
         public async Task OnGetAsync()
         {
-            Ships = await _db.Ships.AsNoTracking().ToListAsync();
+            await Task.Delay(1);
+            //Ships = await _db.Ships.AsNoTracking().ToListAsync();
         }
 
         public async Task<IActionResult> OnPostAddShipAsync()
@@ -69,7 +82,7 @@ namespace SpaceInitiative.Pages
             {
                 return Page();
             }
-
+            Ship.EncounterID = Encounter.EncounterID;
             _db.Ships.Add(Ship);
             await _db.SaveChangesAsync();
             return RedirectToPage("/Index");
@@ -94,7 +107,7 @@ namespace SpaceInitiative.Pages
             if (CurrentRound.Step == ROUND_STEP.HELM)
             {
                 Random r = new Random();
-                foreach (var ship in _db.Ships)
+                foreach (var ship in Ships)
                 {
                     ship.Roll = r.Next(20) + 1 + ship.BonusCurrent;
                     _db.Attach(ship).State = EntityState.Modified;
@@ -135,9 +148,12 @@ namespace SpaceInitiative.Pages
 
             if (ship != null)
             {
-                Ship newShip = new Ship();
-                newShip.Name = ship.Name + " (copy)";
-                newShip.BonusBase = ship.BonusBase;
+                Ship newShip = new Ship
+                {
+                    Name = ship.Name + " (copy)",
+                    BonusBase = ship.BonusBase,
+                    EncounterID = Encounter.EncounterID
+                };
                 _db.Ships.Add(newShip);
                 await _db.SaveChangesAsync();
             }
