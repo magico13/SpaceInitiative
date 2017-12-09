@@ -7,6 +7,8 @@
 <div style="text-align:center">
     <h2>Create or Resume an Encounter</h2>
     <form method="post">
+        <label asp-for="EncounterTitle">Encounter Title:</label>
+        <input asp-for="EncounterTitle" />
         <button class="btn btn-default" type="submit" asp-page-handler="CreateEncounter">Create Encounter</button>
     </form>
 
@@ -15,4 +17,14 @@
         <input style="width:75px" asp-for="EncounterStringID"/>
         <button class="btn btn-default" type="submit" asp-page-handler="ResumeEncounter">Resume Encounter</button>
     </form>
+
+    @if (Model.RecentEncounters.Any())
+    {
+        <h3>Recent Encounters</h3>
+        @foreach (var encounter in Model.RecentEncounters)
+        {
+            <a href="/Encounter?id=@encounter.EncounterStringID">@encounter.EncounterStringID - @encounter.EncounterTitle</a>
+            <br />
+        }
+    }
 </div>

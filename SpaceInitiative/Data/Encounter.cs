@@ -14,6 +14,8 @@ namespace SpaceInitiative.Data
         [Required]
         public string EncounterStringID { get; set; }
 
+        public string EncounterTitle { get; set; }
+
         public DateTime LastUpdate { get; set; }
     }
 }
