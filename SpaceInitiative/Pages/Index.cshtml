@@ -1,136 +1,18 @@
 ﻿@page
 @model IndexModel
 @{
-    ViewData["Title"] = "Home page";
+    ViewData["Title"] = "Index";
 }
 
-<div id="baseDiv">
+<div style="text-align:center">
+    <h2>Create or Resume an Encounter</h2>
     <form method="post">
-        <table class="table" >
-            <thead>
-                <tr>
-                    @*<th>ID</th>*@
-                    <th>Name</th>
-                    <th align="center">Base Bonus</th>
-                    <th align="center">Current Bonus</th>
-                    <th align="center">Roll</th>
-                </tr>
-            </thead>
-            <tbody>
-                @for (int i = 0; i < (Model.Ships?.Count ?? 0); i++)
-                {
-                    var ship = Model.Ships[i];
-                    <tr>
-                        @*<td>@ship.Id</td>*@
-                        <td align="justify"><input asp-for="@ship.Name"/></td>
-                        <td align="center">@ship.BonusBase</td>
-                        <td align="center"><input asp-for="@ship.BonusCurrent" style="width:50px" /></td>
-                        <td align="center">@ship.Roll</td>
-                        <td align="justify">
-                            <button type="submit" asp-page-handler="Update" asp-route-id="@ship.Id" asp-route-index="@i">Update</button>
-                            <button type="submit" asp-page-handler="Delete" asp-route-id="@ship.Id">Remove</button>
-                            <button type="submit" asp-page-handler="Duplicate" asp-route-id="@ship.Id">Duplicate</button>
-                        </td>
-                    </tr>
-                }
-            </tbody>
-        </table>
+        <button class="btn btn-default" type="submit" asp-page-handler="CreateEncounter">Create Encounter</button>
     </form>
 
-    <div id="RoundAndAdd" style="max-width:250px;float:left">
-        <h3>Round Number: @Model.CurrentRound.Round</h3>
-        <h4>Phase: @Model.CurrentRound.Step</h4>
-
-        <form method="post">
-            <button type="submit" asp-page-handler="roll">Advance Round</button>
-            <button type="submit" asp-page-handler="ResetCounter">Reset Counter</button>
-        </form>
-
-        <div asp-validation-summary="All"></div>
-        <form method="POST">
-            <h4>Add a new ship:</h4>
-            <div>
-                <label asp-for="Ship.Name" style="width:50px">Name:</label><input asp-for="Ship.Name" />
-            </div>
-            <div>
-                <label asp-for="Ship.BonusBase" style="width:50px">Bonus:</label><input asp-for="Ship.BonusBase" />
-            </div>
-            <button type="submit" asp-page-handler="AddShip">Add Ship</button>
-        </form>
-    </div>
-
-    <div id="RoundInfo" style="float:left;margin-left:10px">
-        <h3>@Model.CurrentRound.Step Phase Actions:</h3>
-        <div>
-            <h4>Captain (<a href="http://www.starfindersrd.com/game-mastering/starship-combat/#Captain_Actions" target="_blank">link</a>)</h4>
-            <ul>
-                <li><b>Demand</b> - +4 one check, DC 15+2T Intimidate. Once per combat per person.</li>
-                <li><b>Encourage</b> - +2 one check (Aid Another), DC 10 same skill or 15+T Diplomacy</li>
-                <li><b>Taunt (Push)</b> - DC 15+2xEnemy Tier Bluff/Intimidate to give -2 for 1d4 rounds on one phase, -4 on push</li>
-                <li><b>Orders (lvl 6, Push)</b> - Spend 1 Resolve to grant additional action to one member. DC 10+3xT</li>
-                <li><b>Moving Speech (lvl 12, Push)</b> - Spend 1 Resolve, DC 15+2xT Diplomacy. Allies can roll twice and take better.</li>
-            </ul>
-        </div>
-        @if (Model.CurrentRound.Step == Data.ROUND_STEP.ENGINEERING)
-        {
-            <div>
-                <h4>Engineer (<a href="http://www.starfindersrd.com/game-mastering/starship-combat/#Engineer_Actions" target="_blank">link</a>)</h4>
-                <ul>
-                    <li><b>Divert</b> - DC 10+2xT Engineering. Boost a system (+2 speed, +2 science officer, 1s as 2s on damage, or 5% of PCU shields back)</li>
-                    <li><b>Hold It Together</b> - DC 15+2xT Engineering. Critical Damage 2 steps less for round. Not affected by core Crit Dmg.</li>
-                    <li><b>Patch</b> - Reduce critical effect. DC 10/15/20+2xT and 1/2/3 actions. Not affected by core Crit Dmg.</li>
-                    <li><b>Overpower (6 ranks, Push)</b> - Spend 1 Resolve, DC 10+3xT: Divert to 3 systems.</li>
-                    <li><b>Quick Fix (12 ranks)</b> - Spend 1 Resolve, DC 15+2xT. Remove critical damage from 1 system for 1 hour.</li>
-                </ul>
-            </div>
-        }
-        else if (Model.CurrentRound.Step == Data.ROUND_STEP.HELM)
-        {
-            <div>
-                <h4>Pilot (<a href="http://www.starfindersrd.com/game-mastering/starship-combat/#Pilot_Actions" target="_blank">link</a>)</h4>
-                <ul>
-                    <li><b>Fly</b> - Move up to Speed, turning as allowed by maneuverability. No check required.</li>
-                    <li><b>Maneuver</b> - Move up to Speed, DC 15+2xT Piloting to reduce turn distance by 1 (min 0).</li>
-                    <li><b>Stunt (Push)</b> - Perform a stunt as described <a href="http://www.starfindersrd.com/game-mastering/starship-combat/#Stunts" target="_blank">here</a>.</li>
-                    <li><b>Full Power (6 ranks, Push)</b> - Spend 1 Resolve to move 1.5x but with turning increased by 2.</li>
-                    <li><b>Audacious Gambit (12 ranks, Push)</b> - Spend 1 Resolve, DC 15+2xT Piloting, move up to Speed, <br />reduce turns by 2 and don't provoke free attacks. Failure moves as normal.</li>
-                </ul>
-            </div>
-            <div>
-                <h4>Science Officer (<a href="http://www.starfindersrd.com/game-mastering/starship-combat/#Science_Officer_Actions" target="_blank">link</a>)</h4>
-                <ul>
-                    <li><b>Balance</b> - DC 15+2xT Computers. Reassign shields. Each arc must have at least 10% of remaining SP.</li>
-                    <li><b>Scan</b> - DC 10+ET+Countermeasures Computers to learn more info about the ship.</li>
-                    <li><b>Target System (Push)</b> - DC 15+ET+Countermeasures Computers. Next attack crits on 19-20. If crit, affects chosen system.</li>
-                    <li><b>Lock On (6 ranks, Push)</b> - Spend 1 Resolve, DC 15+ET+Countermeasures Computers. +2 Gunnery checks against target.</li>
-                    <li><b>Improve Countermeasures (12 ranks, Push)</b> - Spend 1 Resolve, DC 10+2xET+Countermeasures Computers. <br />Target's Gunners have disadvantage.</li>
-                </ul>
-            </div>
-            <div>
-                <h4>Minor - Pilot (<a href="http://www.starfindersrd.com/game-mastering/starship-combat/#Minor_Crew_Actions" target="_blank">link</a>)</h4>
-                <ul>
-                    <li><b>Glide</b> - Move half speed, increase turn by 2. Can add Piloting ranks to AC/TL.</li>
-                </ul>
-            </div>
-        }
-        else
-        {
-            <div>
-                <h4>Gunner (<a href="http://www.starfindersrd.com/game-mastering/starship-combat/#Gunner_Actions" target="_blank">link</a>)</h4>
-                <ul>
-                    <li><b>Fire at Will (Push)</b> - Can fire two weapons regardless of arc with a -4 on the attacks.</li>
-                    <li><b>Shoot</b> - Can fire a single weapon. If turret, can fire in any arc.</li>
-                    <li><b>Broadside (lvl 6, Push)</b> - Spend 1 Resolve, fire all weapons in an arc (including turrets) at -2 attack.</li>
-                    <li><b>Precise Targeting (lvl 12, Push)</b> - Spend 1 Resolve, attack 1 target with 1 weapon, if hit and no shields then deal critical damage.</li>
-                </ul>
-            </div>
-            <div>
-                <h4>Minor - Gunner (<a href="http://www.starfindersrd.com/game-mastering/starship-combat/#Minor_Crew_Actions" target="_blank">link</a>)</h4>
-                <ul>
-                    <li><b>Snap Shot</b> - Fire one weapon at -2 attack if no other weapons fired.</li>
-                </ul>
-            </div>
-        }
-    </div>
-    <div style="clear:both" />
+    <form method="post">
+        <label asp-for="EncounterStringID">Encounter ID:</label>
+        <input style="width:75px" asp-for="EncounterStringID"/>
+        <button class="btn btn-default" type="submit" asp-page-handler="ResumeEncounter">Resume Encounter</button>
+    </form>
 </div>

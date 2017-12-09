@@ -47,7 +47,10 @@ namespace SpaceInitiative
             {
                 routes.MapRoute(
                     name: "default",
-                    template: "{controller}/{action=Index}/{id?}");
+                    template: "{controller}/{action=Index}");
+                routes.MapRoute(
+                    name: "encounter",
+                    template: "{controller}/{action}/{id?}");
             });
         }
     }
