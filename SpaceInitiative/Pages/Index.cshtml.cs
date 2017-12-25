@@ -65,7 +65,7 @@ namespace SpaceInitiative.Pages
 
 
         [HttpPost]
-        public IActionResult OnPostCreateEncounter()
+        public async Task<IActionResult> OnPostCreateEncounterAsync()
         {
             Encounter encounter = new Encounter()
             {
@@ -96,14 +96,16 @@ namespace SpaceInitiative.Pages
             _db.Stats.First().TotalEncountersCreated++;
             _db.SaveChanges();
 
-            removeOldEncountersFromList();
+            removeOldEncountersFromCookie();
             addEncounterToCookie(encounter);
+
+            await removeOldEncountersFromDB();
 
             return Redirect("/Encounter?id=" + encounter.EncounterStringID);
         }
 
         [HttpPost]
-        public IActionResult OnPostResumeEncounter()
+        public async Task<IActionResult> OnPostResumeEncounterAsync()
         {
             if (!string.IsNullOrWhiteSpace(EncounterStringID))
             {
@@ -115,11 +117,12 @@ namespace SpaceInitiative.Pages
 
                 if (encounter != null)
                 {
-                    removeOldEncountersFromList();
+                    removeOldEncountersFromCookie();
                     addEncounterToCookie(encounter);
                     return Redirect("/Encounter?id=" + EncounterStringID);
                 }
             }
+            await Task.Delay(0);
             return RedirectToPage();
         }
 
@@ -133,7 +136,7 @@ namespace SpaceInitiative.Pages
             }
         }
 
-        private void removeOldEncountersFromList()
+        private void removeOldEncountersFromCookie()
         {
             // remove old encounters from cookie
  
@@ -148,6 +151,19 @@ namespace SpaceInitiative.Pages
                     RecentEncounters.Remove(oldest);
                 }
             }
+        }
+
+        private async Task removeOldEncountersFromDB()
+        {
+            TimeSpan cutoff = TimeSpan.FromDays(14);
+            foreach (Encounter encounter in new List<Encounter>(_db.Encounters))
+            {
+                if (DateTime.UtcNow - encounter.LastUpdate > cutoff)
+                {
+                    _db.Encounters.Remove(encounter);
+                }
+            }
+            await _db.SaveChangesAsync();
         }
     }
 }

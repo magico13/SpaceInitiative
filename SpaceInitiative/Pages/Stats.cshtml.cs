@@ -30,6 +30,14 @@ namespace SpaceInitiative.Pages
             }
         }
 
+        public int CurrentEncounters
+        {
+            get
+            {
+                return _db.Encounters.Count();
+            }
+        }
+
         public void OnGet()
         {
         }

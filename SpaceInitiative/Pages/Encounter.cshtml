@@ -15,7 +15,7 @@
                     <th>Name</th>
                     <th align="center">Base Bonus</th>
                     <th align="center">Current Bonus</th>
-                    <th align="center">Roll</th>
+                    <th align="center">Piloting Result</th>
                 </tr>
             </thead>
             <tbody>
@@ -27,7 +27,7 @@
                         <td align="justify"><input asp-for="@ship.Name"/></td>
                         <td align="center">@ship.BonusBase</td>
                         <td align="center"><input asp-for="@ship.BonusCurrent" style="width:50px" /></td>
-                        <td align="center">@ship.Roll</td>
+                        <td align="center"><input asp-for="@ship.Roll" style="width:50px" /></td>
                         <td align="justify">
                             <button type="submit" asp-page-handler="Update" asp-route-id="@ship.Id" asp-route-index="@i" asp-route-encounterid="@Model.EncounterID">Update</button>
                             <button type="submit" asp-page-handler="Delete" asp-route-id="@ship.Id" asp-route-encounterid="@Model.EncounterID">Remove</button>
@@ -47,7 +47,7 @@
             <button type="submit" asp-page-handler="roll" asp-route-encounterid="@Model.EncounterID">Advance Round</button>
             <button type="submit" asp-page-handler="ResetCounter" asp-route-encounterid="@Model.EncounterID">Reset Counter</button>
         </form>
-
+        <hr />
         <div asp-validation-summary="All"></div>
         <form method="POST">
             <h4>Add a new ship:</h4>
@@ -67,11 +67,11 @@
         <div>
             <h4>Captain (<a href="http://www.starfindersrd.com/game-mastering/starship-combat/#Captain_Actions" target="_blank">link</a>)</h4>
             <ul>
-                <li><b>Demand</b> - +4 one check, DC 15+2T Intimidate. Once per combat per person.</li>
-                <li><b>Encourage</b> - +2 one check (Aid Another), DC 10 same skill or 15+T Diplomacy</li>
-                <li><b>Taunt (Push)</b> - DC 15+2xEnemy Tier Bluff/Intimidate to give -2 for 1d4 rounds on one phase, -4 on push</li>
-                <li><b>Orders (lvl 6, Push)</b> - Spend 1 Resolve to grant additional action to one member. DC 10+3xT</li>
-                <li><b>Moving Speech (lvl 12, Push)</b> - Spend 1 Resolve, DC 15+2xT Diplomacy. Allies can roll twice and take better.</li>
+                <li><b>Demand</b> - +4 one check, DC 15+1.5xT Intimidate. Once per combat per person.</li>
+                <li><b>Encourage</b> - +2 one check (Aid Another), DC 10 same skill or 15 Diplomacy</li>
+                <li><b>Taunt (Push)</b> - DC 15+1.5xET Bluff/Intimidate to give -2 for 1d4 rounds on one phase, -4 on push. Once per ship per combat.</li>
+                <li><b>Orders (lvl 6, Push)</b> - Spend 1 Resolve to grant additional action to one member. DC 15+1.5xT</li>
+                <li><b>Moving Speech (lvl 12, Push)</b> - Spend 1 Resolve, DC 20+1.5xT Diplomacy. Allies can roll twice and take better.</li>
             </ul>
         </div>
         @if (Model.CurrentRound.Step == Data.ROUND_STEP.ENGINEERING)
@@ -79,11 +79,11 @@
             <div>
                 <h4>Engineer (<a href="http://www.starfindersrd.com/game-mastering/starship-combat/#Engineer_Actions" target="_blank">link</a>)</h4>
                 <ul>
-                    <li><b>Divert</b> - DC 10+2xT Engineering. Boost a system (+2 speed, +2 science officer, 1s as 2s on damage, or 5% of PCU shields back)</li>
-                    <li><b>Hold It Together</b> - DC 15+2xT Engineering. Critical Damage 2 steps less for round. Not affected by core Crit Dmg.</li>
-                    <li><b>Patch</b> - Reduce critical effect. DC 10/15/20+2xT and 1/2/3 actions. Not affected by core Crit Dmg.</li>
-                    <li><b>Overpower (6 ranks, Push)</b> - Spend 1 Resolve, DC 10+3xT: Divert to 3 systems.</li>
-                    <li><b>Quick Fix (12 ranks)</b> - Spend 1 Resolve, DC 15+2xT. Remove critical damage from 1 system for 1 hour.</li>
+                    <li><b>Divert</b> - DC 10+1.5xT Engineering. Boost a system (+2 speed, +2 science officer, 1s as 2s on damage, or 5% of PCU shields back)</li>
+                    <li><b>Hold It Together</b> - DC 15+1.5xT Engineering. Critical Damage 2 steps less for round. Not affected by core Crit Dmg.</li>
+                    <li><b>Patch</b> - Reduce critical effect. DC 10/15/20+1.5xT and 1/2/3 actions. Not affected by core Crit Dmg.</li>
+                    <li><b>Overpower (6 ranks, Push)</b> - Spend 1 Resolve, DC 15+1.5xT: Divert to 3 systems.</li>
+                    <li><b>Quick Fix (12 ranks)</b> - Spend 1 Resolve, DC 20+1.5xT. Remove critical damage from 1 system for 1 hour.</li>
                 </ul>
             </div>
         }
@@ -93,20 +93,51 @@
                 <h4>Pilot (<a href="http://www.starfindersrd.com/game-mastering/starship-combat/#Pilot_Actions" target="_blank">link</a>)</h4>
                 <ul>
                     <li><b>Fly</b> - Move up to Speed, turning as allowed by maneuverability. No check required.</li>
-                    <li><b>Maneuver</b> - Move up to Speed, DC 15+2xT Piloting to reduce turn distance by 1 (min 0).</li>
-                    <li><b>Stunt (Push)</b> - Perform a stunt as described <a href="http://www.starfindersrd.com/game-mastering/starship-combat/#Stunts" target="_blank">here</a>.</li>
+                    <li><b>Maneuver</b> - Move up to Speed, DC 15+1.5xT Piloting to reduce turn distance by 1 (min 0).</li>
+                    <li><b>Stunt (Push)</b> - Perform a stunt as described <a href="http://www.starfindersrd.com/game-mastering/starship-combat/#Stunts" target="_blank">here</a>. 
+                    <button class="btn btn-default accordion" style="height:20px;position:relative;width:120px"><span style="position:absolute;left:2px;top:0px">Show/Hide Stunts</span></button>
+                    <div class="panel" style="display:none">
+                        <ul>
+                            <li>
+                                <b>Back Off</b> - DC 10+1.5xT Piloting. Move half speed backward without changing facing.<br />
+                                Fail: Move back 1 hex. Fail by 5+: No movement, -4 to AC/TL.
+                            </li>
+                            <li>
+                                <b>Barrel Roll</b> - DC 10+1.5xT Piloting. (Large or smaller) Flip upside down. Port/Starboard swap for a turn.<br />
+                                Fail: Move half, do not roll. Fail by 5+: Move half, -4 AC/TL.
+                            </li>
+                            <li>
+                                <b>Evade</b> - DC 10+1.5xT Piloting. Move as normal, +2 circumstance on AC/TL.<br />
+                                Fail: Move as normal. Fail by 5+: Move as normal, -2 AC/TL.
+                            </li>
+                            <li>
+                                <b>Flip and Burn</b> - DC 15+1.5xT Piloting. Move straight forward up to half speed, rotate 180 degrees.<br />
+                                Fail: Move half speed but do not rotate.
+                            </li>
+                            <li>
+                                <b>Flyby</b> - DC 15+1.5xT Piloting. Move normal speed, through 1 occupied hex without provoking a free attack. <br />
+                                Next Gunnery phase, any 1 arc can fire at any other arc at close range.<br />
+                                Fail: Move as above, no special attack and provoke free attack.
+                            </li>
+                            <li>
+                                <b>Slide</b> - DC 10+1.5xT Piloting. Move up to speed in forward-port or forward-starboard without changing facing.<br />
+                                Fail: Move forward up to half speed without turning.
+                            </li>
+                            <li> <b>Turn in Place</b> - No check required. Face any direction instead of moving. Clumsy: -4 AC/TL. Poor: -2 AC/TL. </li>
+                        </ul>
+                    </div></li>
                     <li><b>Full Power (6 ranks, Push)</b> - Spend 1 Resolve to move 1.5x but with turning increased by 2.</li>
-                    <li><b>Audacious Gambit (12 ranks, Push)</b> - Spend 1 Resolve, DC 15+2xT Piloting, move up to Speed, <br />reduce turns by 2 and don't provoke free attacks. Failure moves as normal.</li>
+                    <li><b>Audacious Gambit (12 ranks, Push)</b> - Spend 1 Resolve, DC 20+1.5xT Piloting, move up to Speed, <br />reduce turns by 2 and don't provoke free attacks. Failure moves as normal.</li>
                 </ul>
             </div>
             <div>
                 <h4>Science Officer (<a href="http://www.starfindersrd.com/game-mastering/starship-combat/#Science_Officer_Actions" target="_blank">link</a>)</h4>
                 <ul>
-                    <li><b>Balance</b> - DC 15+2xT Computers. Reassign shields. Each arc must have at least 10% of remaining SP.</li>
-                    <li><b>Scan</b> - DC 10+ET+Countermeasures Computers to learn more info about the ship.</li>
-                    <li><b>Target System (Push)</b> - DC 15+ET+Countermeasures Computers. Next attack crits on 19-20. If crit, affects chosen system.</li>
-                    <li><b>Lock On (6 ranks, Push)</b> - Spend 1 Resolve, DC 15+ET+Countermeasures Computers. +2 Gunnery checks against target.</li>
-                    <li><b>Improve Countermeasures (12 ranks, Push)</b> - Spend 1 Resolve, DC 10+2xET+Countermeasures Computers. <br />Target's Gunners have disadvantage.</li>
+                    <li><b>Balance</b> - DC 10+1.5xT Computers. Reassign shields from one quadrant to another (or average all). <br />Each arc must have at least 10% of remaining SP.</li>
+                    <li><b>Scan</b> - DC 5+1.5xET+Countermeasures Computers to learn more info about target ship.</li>
+                    <li><b>Target System (Push)</b> - DC 5+1.5xET+Countermeasures Computers. Next attack crits on 19-20. If crit, affects chosen system.</li>
+                    <li><b>Lock On (6 ranks, Push)</b> - Spend 1 Resolve, DC 5+1.5xET+Countermeasures Computers. +2 Gunnery checks against target.</li>
+                    <li><b>Improve Countermeasures (12 ranks, Push)</b> - Spend 1 Resolve, DC 5+1.5xET+Countermeasures Computers. <br />Target's Gunners have disadvantage.</li>
                 </ul>
             </div>
             <div>
@@ -134,6 +165,9 @@
                 </ul>
             </div>
         }
+        <div>
+            <p>DCs sourced from the <a href="http://paizo.com/starfinder/faq#v5748eaic9w55" target="_blank">Starfinder FAQ</a></p>
+        </div>
     </div>
     <div style="clear:both" />
 </div>

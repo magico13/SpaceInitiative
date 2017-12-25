@@ -15,6 +15,8 @@ namespace SpaceInitiative.Pages
 
         public static EncounterHolder Create(Encounter encounter)
         {
+            //update timestamp for the encounter
+
             return new EncounterHolder() { Id = encounter.EncounterStringID };
         }
     }
@@ -42,10 +44,6 @@ namespace SpaceInitiative.Pages
                 if (_encounter == null)
                 {
                     _encounter = _db.Encounters.Find(EncounterID);
-                }
-                if (_encounter != null)
-                {
-                    _encounter.LastUpdate = DateTime.UtcNow;
                 }
                 return _encounter;
             }
@@ -97,6 +95,7 @@ namespace SpaceInitiative.Pages
             {
                 _encounter = await _db.Encounters.FirstAsync(e => e.EncounterStringID == id);
                 EncounterID = _encounter.EncounterID;
+                await updateEncounterTime(true);
             }
             else
             {
@@ -155,19 +154,25 @@ namespace SpaceInitiative.Pages
         public async Task<IActionResult> OnPostUpdateAsync(int id, int index, int encounterID)
         {
             EncounterID = encounterID;
-            if (ModelState.TryGetValue("Ship.BonusCurrent", out var bonusVal) && ModelState.TryGetValue("Ship.Name", out var nameVal))
+            if (ModelState.TryGetValue("Ship.BonusCurrent", out var bonusVal) 
+                && ModelState.TryGetValue("Ship.Name", out var nameVal)
+                && ModelState.TryGetValue("Ship.Roll", out var rollVal))
             {
                 string newName = nameVal.AttemptedValue.Split(',')[index];
                 if (int.TryParse(bonusVal.AttemptedValue.Split(',')[index], out int bonus))
-                  {
-                    var ship = await _db.Ships.FindAsync(id);
-
-                    if (ship != null)
+                {
+                    if (int.TryParse(rollVal.AttemptedValue.Split(',')[index], out int roll))
                     {
-                        ship.Name = newName;
-                        ship.BonusCurrent = bonus;
-                        _db.Attach(ship).State = EntityState.Modified;
-                        await _db.SaveChangesAsync();
+                        var ship = await _db.Ships.FindAsync(id);
+
+                        if (ship != null)
+                        {
+                            ship.Name = newName;
+                            ship.BonusCurrent = bonus;
+                            ship.Roll = roll;
+                            _db.Attach(ship).State = EntityState.Modified;
+                            await _db.SaveChangesAsync();
+                        }
                     }
                 }
             }
@@ -201,6 +206,19 @@ namespace SpaceInitiative.Pages
             CurrentRound.Step = ROUND_STEP.ENGINEERING;
             await _db.SaveChangesAsync();
             return RedirectToPage(EncounterHolder.Create(Encounter));
+        }
+
+        private async Task updateEncounterTime(bool save)
+        {
+            if (Encounter != null)
+            {
+                Encounter.LastUpdate = DateTime.UtcNow;
+                _db.Attach(Encounter).State = EntityState.Modified;
+                if (save)
+                {
+                    await _db.SaveChangesAsync();
+                }
+            }
         }
     }
 }
