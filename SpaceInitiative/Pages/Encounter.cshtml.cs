@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using SpaceInitiative.Data;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Http;
 
 namespace SpaceInitiative.Pages
 {
@@ -15,13 +16,11 @@ namespace SpaceInitiative.Pages
 
         public static EncounterHolder Create(Encounter encounter)
         {
-            //update timestamp for the encounter
-
             return new EncounterHolder() { Id = encounter.EncounterStringID };
         }
     }
 
-    public class EncounterModel : PageModel
+    public class EncounterModel : PageModel, IRequestResponse
     {
         private readonly AppDbContext _db;
 
@@ -88,6 +87,22 @@ namespace SpaceInitiative.Pages
             }
         }
 
+        public HttpRequest PageRequest { get { return Request; } }
+        public HttpResponse PageResponse { get { return Response; } }
+
+        private RecentEncounterCookie _encounterCookie;
+        public RecentEncounterCookie EncounterCookie
+        {
+            get
+            {
+                if (_encounterCookie == null)
+                {
+                    _encounterCookie = new RecentEncounterCookie(this, _db);
+                }
+                return _encounterCookie;
+            }
+        }
+
         public async Task OnGetAsync(string id)
         {
             id = id?.ToUpper();
@@ -96,6 +111,7 @@ namespace SpaceInitiative.Pages
                 _encounter = await _db.Encounters.FirstAsync(e => e.EncounterStringID == id);
                 EncounterID = _encounter.EncounterID;
                 await updateEncounterTime(true);
+                EncounterCookie.AddEncounterToCookie(Encounter);
             }
             else
             {

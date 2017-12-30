@@ -5,10 +5,11 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using SpaceInitiative.Data;
+using Microsoft.AspNetCore.Http;
 
 namespace SpaceInitiative.Pages
 {
-    public class IndexModel : PageModel
+    public class IndexModel : PageModel, IRequestResponse
     {
         private readonly AppDbContext _db;
         private readonly StringIDGenerator _generator = new StringIDGenerator();
@@ -19,34 +20,19 @@ namespace SpaceInitiative.Pages
         [BindProperty]
         public string EncounterTitle { get; set; }
 
+        public HttpRequest PageRequest { get { return Request; } }
+        public HttpResponse PageResponse { get { return Response; } }
 
-        private List<Encounter> _recentEncounters;
-        public List<Encounter> RecentEncounters
+        private RecentEncounterCookie _encounterCookie;
+        public RecentEncounterCookie EncounterCookie
         {
             get
             {
-                if (_recentEncounters == null)
+                if (_encounterCookie == null)
                 {
-                    _recentEncounters = new List<Encounter>();
-                    if (Request.Cookies.TryGetValue("RecentEncounters", out string recentList))
-                    {
-                        foreach (string recent in recentList.Split(";"))
-                        {
-                            if (!string.IsNullOrWhiteSpace(recent))
-                            {
-                                if (_recentEncounters.Find(e => e.EncounterStringID == recent) == null)
-                                {
-                                    if (_db.Encounters.Any(e => e.EncounterStringID == recent))
-                                    {
-                                        _recentEncounters.Add(_db.Encounters.First(e => e.EncounterStringID == recent));
-                                    }
-                                }
-                            }
-                        }
-                    }
+                    _encounterCookie = new RecentEncounterCookie(this, _db);
                 }
-                _recentEncounters = _recentEncounters.OrderByDescending(e => e.LastUpdate).ToList();
-                return _recentEncounters;
+                return _encounterCookie;
             }
         }
 
@@ -96,8 +82,8 @@ namespace SpaceInitiative.Pages
             _db.Stats.First().TotalEncountersCreated++;
             _db.SaveChanges();
 
-            removeOldEncountersFromCookie();
-            addEncounterToCookie(encounter);
+            EncounterCookie.RemoveOldEncountersFromCookie();
+            EncounterCookie.AddEncounterToCookie(encounter);
 
             await removeOldEncountersFromDB();
 
@@ -117,40 +103,13 @@ namespace SpaceInitiative.Pages
 
                 if (encounter != null)
                 {
-                    removeOldEncountersFromCookie();
-                    addEncounterToCookie(encounter);
+                    EncounterCookie.RemoveOldEncountersFromCookie();
+                    EncounterCookie.AddEncounterToCookie(encounter);
                     return Redirect("/Encounter?id=" + EncounterStringID);
                 }
             }
             await Task.Delay(0);
             return RedirectToPage();
-        }
-
-
-        private void addEncounterToCookie(Encounter encounter)
-        {
-            if (RecentEncounters.Find(e => e.EncounterStringID == encounter.EncounterStringID) == null)
-            {
-                RecentEncounters.Add(encounter);
-                Response.Cookies.Append("RecentEncounters", string.Join(";", RecentEncounters.Select(e => e.EncounterStringID)));
-            }
-        }
-
-        private void removeOldEncountersFromCookie()
-        {
-            // remove old encounters from cookie
- 
-            int encounterMax = 9;
-            if (RecentEncounters.Count > encounterMax)
-            {
-                List<Encounter> oldestList = RecentEncounters.OrderBy(o => o.LastUpdate).ToList();
-                while (RecentEncounters.Count > encounterMax)
-                {
-                    Encounter oldest = oldestList.First();
-                    oldestList.Remove(oldest);
-                    RecentEncounters.Remove(oldest);
-                }
-            }
         }
 
         private async Task removeOldEncountersFromDB()

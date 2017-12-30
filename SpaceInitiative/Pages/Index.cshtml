@@ -21,10 +21,10 @@
         <button class="btn btn-default" type="submit" asp-page-handler="ResumeEncounter">Resume Encounter</button>
     </form>
 
-    @if (Model.RecentEncounters.Any())
+    @if (Model.EncounterCookie.RecentEncounters.Any())
     {
         <h3>Recent Encounters</h3>
-        @foreach (var encounter in Model.RecentEncounters)
+        @foreach (var encounter in Model.EncounterCookie.RecentEncounters)
         {
             <a href="/Encounter?id=@encounter.EncounterStringID">@encounter.EncounterStringID - @encounter.EncounterTitle</a>
             <br />
