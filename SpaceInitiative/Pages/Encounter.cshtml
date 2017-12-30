@@ -5,7 +5,7 @@
 }
 
 <div id="baseDiv">
-    <h2>@Model.Encounter.EncounterTitle</h2>
+    <h2>@Model.Encounter.EncounterStringID - @Model.Encounter.EncounterTitle</h2>
 
     <form method="post">
         <table class="table" >
@@ -103,7 +103,7 @@
                                 Fail: Move back 1 hex. Fail by 5+: No movement, -4 to AC/TL.
                             </li>
                             <li>
-                                <b>Barrel Roll</b> - DC 10+1.5xT Piloting. (Large or smaller) Flip upside down. Port/Starboard swap for a turn.<br />
+                                <b>Barrel Roll</b> - DC 10+1.5xT Piloting. (Large or smaller) Move half and flip upside down, swapping Port/Starboard for a turn.<br />
                                 Fail: Move half, do not roll. Fail by 5+: Move half, -4 AC/TL.
                             </li>
                             <li>
