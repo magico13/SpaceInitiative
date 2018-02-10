@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using SpaceInitiative.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Http;
+using System.Text;
 
 namespace SpaceInitiative.Pages
 {
@@ -235,6 +236,13 @@ namespace SpaceInitiative.Pages
                     await _db.SaveChangesAsync();
                 }
             }
+        }
+
+        public FileResult Export(int encounterID)
+        {
+            EncounterID = encounterID;
+            string serialized = Newtonsoft.Json.JsonConvert.SerializeObject(Ships);
+            return new FileContentResult(Encoding.UTF32.GetBytes(serialized), "text/plain");
         }
     }
 }
