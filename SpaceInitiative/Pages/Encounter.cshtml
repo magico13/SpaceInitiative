@@ -77,6 +77,16 @@
         @if (Model.CurrentRound.Step == Data.ROUND_STEP.ENGINEERING)
         {
             <div>
+                <h4>Open Crew Actions (Occurs First) (<a href="https://www.starjammersrd.com/game-mastering/starship-combat/#Minor_Crew_Actions" target="_blank">link</a>)</h4>
+                <ul>
+                    <li><b>Erratic Maneuvering</b> - +1 Circumstance bonus to AC and TL against opponent that performs flyby stunt this round.</li>
+                    <li><b>Feign Disaster</b> - Fake distress, enemy captain/sci officer make Computers DC 10+1.5xT or -2 penalty on scans or lock-on and Piloting within 1 hex. Cannot be reused.</li>
+                    <li><b>Prioritize Calculation</b> - For one crew station using ship's computer bonus, add an extra +1 to the bonus.</li>
+                    <li><b>Range Finding</b> - One crew member (gunner, pilot, or sci officer) gain +1 bonus to attack/skill check of their choice.</li>
+                    <li><b>Ready Weapon System</b> - Choose one weapon, if not fired this round and fired next round, gain +1 damage (+2 if tier 6+)</li>
+                </ul>
+            </div>
+            <div>
                 <h4>Engineer (<a href="http://www.starfindersrd.com/game-mastering/starship-combat/#Engineer_Actions" target="_blank">link</a>)</h4>
                 <ul>
                     <li><b>Divert</b> - DC 10+1.5xT Engineering. Boost a system (+2 speed, +2 science officer, 1s as 2s on damage, or 5% of PCU shields back)</li>
@@ -84,6 +94,23 @@
                     <li><b>Patch</b> - Reduce critical effect. DC 10/15/20+1.5xT and 1/2/3 actions. Not affected by core Crit Dmg.</li>
                     <li><b>Overpower (6 ranks, Push)</b> - Spend 1 Resolve, DC 15+1.5xT: Divert to 3 systems.</li>
                     <li><b>Quick Fix (12 ranks)</b> - Spend 1 Resolve, DC 20+1.5xT. Remove critical damage from 1 system for 1 hour.</li>
+                </ul>
+            </div>
+            <div>
+                <h4>Magic Officer (<a href="https://www.starjammersrd.com/game-mastering/starship-combat/#Magic_Officer_Actions" target="_blank">link</a>)</h4>
+                <ul>
+                    <li><b>Precognition</b> - DC 10+1.5xT Mysticism. +2 circumstance bonus to Piloting check to determine piloting order.</li>
+                    <li><b>Scrying</b> - Functions as Scan Sci Officer action but with Mysticism check instead.</li>
+                    <li><b>Eldritch Shot (Push)</b> - DC 10+1.5xT Mysticism. One weapon, treat range as 5 hexes longer.</li>
+                    <li><b>Mystic Haze (6 ranks, Push)</b> - DC 20+1.5xT Mysticism. +1 bonus to AC. Enemy scan/lock-on actions must roll twice and take lower.</li>
+                    <li><b>Psychic Currents (12 ranks)</b> - Spend 1 Resolve and DC 20+1.5xT Mysticism. Reduce minimum turn distance by 1 (minimum of 0).</li>
+                </ul>
+            </div>
+            <div>
+                <h4>Chief Mate (<a href="https://www.starjammersrd.com/game-mastering/starship-combat/#Chief_Mate_Actions" target="_blank">link</a>)</h4>
+                <ul>
+                    <li><b>Maintenance Panel Access</b> - DC 10+1.5xT Acrobatics/Athletics to divert power to 2 systems instead of 1 or overpower 4 systems instead of 3. Failure by 10+ all engineer actions take -2.</li>
+                    <li><b>Targeting Aid (6 ranks, Push)</b> - Spend 1 Resolve and DC 20+1.5xT Acrobatics/Athletics for 1 gunner to make Fire at Will or Broadside action with no penalty. Failure by 10+ that gunner takes -2 to attacks.</li>
                 </ul>
             </div>
         }
@@ -141,9 +168,19 @@
                 </ul>
             </div>
             <div>
-                <h4>Minor - Pilot (<a href="http://www.starfindersrd.com/game-mastering/starship-combat/#Minor_Crew_Actions" target="_blank">link</a>)</h4>
+                <h4>Chief Mate (<a href="https://www.starjammersrd.com/game-mastering/starship-combat/#Chief_Mate_Actions" target="_blank">link</a>)</h4>
                 <ul>
-                    <li><b>Glide</b> - Move half speed, increase turn by 2. Can add Piloting ranks to AC/TL.</li>
+                    <li><b>Manual Realignment</b> - DC 10+1.5xT Acrobatics/Athletics to get +1 info when Sci Officer uses Scan this turn. Fail by 10+ no scan can be attempted.</li>
+                    <li><b>Hard Turn (Push)</b> - DC 10+1.5xT Acrobatics/Athletics to make one turn with maneuverability improved by 1. Failure by 10+ maneuverability reduced by 1.</li>
+                    <li><b>Maximize Speed (Push)</b> - Spend 1 Resolve and DC 25+1.5xT Acrobatics/Athletics to increase speed by 2, cumulative with other increases.</li>
+                </ul>
+            </div>
+            <div>
+                <h4>Minor (<a href="http://www.starfindersrd.com/game-mastering/starship-combat/#Minor_Crew_Actions" target="_blank">link</a>)</h4>
+                <ul>
+                    <li><b>Glide - Pilot</b> - Move half speed, increase turn by 2. Can add Piloting ranks to AC/TL.</li>
+                    <li><b>Quick Rescan - Sci Officer</b> - Requires previous Sci Officer scan on target. DC 5+1.5xT+Countermeasures Computers to receive one piece of info.</li>
+                    <li><b>Visual Identification - Sci Officer</b> - DC 10+1.5xT Computers/Engineering/Perceptive to learn first unknown piece of info.</li>
                 </ul>
             </div>
         }
@@ -159,9 +196,9 @@
                 </ul>
             </div>
             <div>
-                <h4>Minor - Gunner (<a href="http://www.starfindersrd.com/game-mastering/starship-combat/#Minor_Crew_Actions" target="_blank">link</a>)</h4>
+                <h4>Minor (<a href="https://www.starjammersrd.com/game-mastering/starship-combat/#Minor_Crew_Actions-2" target="_blank">link</a>)</h4>
                 <ul>
-                    <li><b>Snap Shot</b> - Fire one weapon at -2 attack if no other weapons fired.</li>
+                    <li><b>Snap Shot - Gunner</b> - Fire one weapon at -2 attack if no other weapons fired.</li>
                 </ul>
             </div>
         }
